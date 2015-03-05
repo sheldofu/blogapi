@@ -52,4 +52,4 @@ app.post('/blog', function(req,res) {
     res.json(true)
 })
 
-app.listen(9202);
+app.listen(process.env.PORT || 9202);
