@@ -4,6 +4,12 @@ var bodyParser = require('body-parser');
 var app = express();
 app.use(bodyParser.json());
 
+// allow tats, becky + my site
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    next();
+});
+
 var blog = [
     { 
         "title" : "Posty One", 
