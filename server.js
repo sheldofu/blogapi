@@ -4,30 +4,29 @@ var bodyParser = require('body-parser');
 var app = express();
 app.use(bodyParser.json());
 
-// allow tats, becky + my site
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     next();
 });
 
-var blog = [
-    { 
-        "title" : "Posty One", 
-        "text" : "Hello!" 
-    },
-    {
-        "title" : "Posty Two", 
-        "text" : "More stuffufufufuf" 
-    },
-    {
-        "title" : "Posty Three", 
-        "text" : "A third - but hopefully not final - post" 
-    }
-]
+app.use(express.static('static'));
 
 app.get('/', function(req, res){
-    res.json(blog);
+    // res.json(blog);
+res.sendfile('static/post.html')
+    // Post.find(function(err, posts) {
+    //     if (err) { return next(err) }
+    //     res.json(posts)
+    // })
 });
+
+app.get('/blog/all', function(req, res){
+    Post.find(function(err, posts) {
+        if (err) { return next(err) }
+        res.json(posts)
+    })
+});
+
 
 app.get('/blog/random', function(req, res){
     var id = Math.floor(Math.random() * blog.length);
@@ -35,13 +34,19 @@ app.get('/blog/random', function(req, res){
     res.json(post);
 });
 
-app.get('/blog:id', function(req, res){
-    if (req.params.id > blog.length) {
-        return res.send('Error, blog post does not exist');
-    }
-    var post = blog[req.params.id];
-    res.json(post)
-});
+
+var mongoose = require('./db')
+
+var Post = mongoose.model('Post', {
+  username: { type: String, required: true },
+  title:    { type: String, required: true },
+  body:     { type: String, required: true },
+  date:     { type: Date,   required: true, default: Date.now }
+})
+
+
+
+
 
 app.post('/blog', function(req,res) {
     if(!req.body.hasOwnProperty('title') || !req.body.hasOwnProperty('text')) {
@@ -49,13 +54,22 @@ app.post('/blog', function(req,res) {
         return res.send('Error 400: Post syntax incorrect');
     }
 
-    var newPost = {
+    //post one
+    var post = new Post({
+        username : 'default',
         title : req.body.title,
-        text : req.body.text
-    }
+        body : req.body.text    
+    })
 
-    quotes.push(newPost);
-    res.json(true)
+    post.save(function (err, post){
+        if (err) {
+            return next(err)
+        }
+        res.json(201, post)
+    })
+
+    // res.json(true)
 })
+
 
 app.listen(process.env.PORT || 9202);
