@@ -9,16 +9,18 @@ app.use(function(req, res, next) {
     next();
 });
 
-app.use(express.static('static'));
+app.use(express.static('templates'));
+app.use(express.static(__dirname + '/js'))
 
 app.get('/', function(req, res){
     // res.json(blog);
-res.sendfile('static/post.html')
+res.sendfile('templates/main.html')
     // Post.find(function(err, posts) {
     //     if (err) { return next(err) }
     //     res.json(posts)
     // })
 });
+
 
 app.get('/blog/all', function(req, res){
     Post.find(function(err, posts) {
@@ -44,7 +46,12 @@ var Post = mongoose.model('Post', {
   date:     { type: Date,   required: true, default: Date.now }
 })
 
+var user = mongoose.Schema({
+    username: { type: String, required: true },
+    password: { type: String, required: true, select: false}
+})
 
+var User = mongoose.model('User', user)
 
 
 
