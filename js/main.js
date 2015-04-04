@@ -2,13 +2,6 @@
 
 var app = angular.module('app', ['ngRoute'])
 
-app.controller('loggedIn', function ($scope, UserSvc) {
-  $scope.logz = 'Logged?'
-  $scope.amLoggedIn = function(){
-    return console.log(UserSvc.getUser().value.data);
-  }
-})
-
 app.service('UserSvc', function ($http) {
   var svc = this
   svc.getUser = function () {
@@ -23,7 +16,6 @@ app.service('UserSvc', function ($http) {
     }).then(function (response) {
       svc.token = response.data
       $http.defaults.headers.common['X-Auth'] = response.data
-      console.log(svc.token)
       return svc.getUser()
     })
   }
@@ -52,11 +44,13 @@ app.controller('PostsCtrl', function ($scope, $http) {
   }
 })
 
-app.controller('LoginCtrl', function ($scope, UserSvc, $location) {
+app.controller('LoginCtrl', function ($scope, $rootScope, UserSvc, $location) {
   $scope.login = function (username, password) {
     UserSvc.login(username, password)
     .then(function (user) {
       $scope.$emit('login', user)
+      $rootScope.loggedIn = 'yes'
+      console.log($rootScope.loggedIn)
       $location.path('/')
     })
   }
@@ -74,9 +68,24 @@ app.controller('RegisterCtrl', function ($scope, UserSvc, $location) {
 
 
 
+
 app.config(function ($routeProvider) {
   $routeProvider
   .when('/posts',    { controller: 'PostsCtrl', templateUrl: 'post.html' })
   .when('/register', { controller: 'RegisterCtrl', templateUrl: 'register.html' })
   .when('/login',    { controller: 'LoginCtrl', templateUrl: 'login.html' })
-})
+}).run( function($rootScope, $location) {
+
+    // register listener to watch route changes
+    $rootScope.$on( "$routeChangeStart", function(event, next, current) {
+      if ( $rootScope.loggedIn == null ) {
+        // no logged user, we should be going to #login
+        if ( next.templateUrl == "partials/login.html" ) {
+          // already going to #login, no redirect needed
+        } else {
+          // not going to #login, we should redirect now
+          $location.path( "/login" );
+        }
+      }         
+    });
+ })

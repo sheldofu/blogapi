@@ -17,14 +17,9 @@
   </nav>
 </header>
 
-<div ng-controller="loggedIn">{{logz}}<br>
-  <form ng-submit="amLoggedIn()">
-    <input class="btn btn-lg btn-block" type="submit" value="Am I logged in">
-  </form>
-</div>
-
 <body >
-  <div class='container' ng-view></div>
+  <div class='col-md-2'></div>
+  <div class='container col-md-8' ng-view></div>
 </body>
 
 <script src="/main.js"></script>
