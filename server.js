@@ -2,6 +2,9 @@ var express = require('express');
 var bodyParser = require('body-parser');
 
 var app = express();
+
+// app.use(require('./auth'))
+app.use('/test', require('./auth'))
 app.use(bodyParser.json());
 
 app.use(function(req, res, next) {
@@ -21,6 +24,9 @@ res.sendfile('templates/main.html')
     // })
 });
 
+app.get('/test', function(req, res){
+res.sendfile('templates/test.html')
+});
 
 app.get('/blog/all', function(req, res){
     Post.find(function(err, posts) {

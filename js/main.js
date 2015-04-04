@@ -2,21 +2,11 @@
 
 var app = angular.module('app', ['ngRoute'])
 
-//posts controller
-app.controller('PostsCtrl', function ($scope, $http) {
-  $scope.message = 'testing'
-  $scope.addPost = function(){
-    if ($scope.postBody) {
-     $http.post('/blog',{
-       title: 'test',
-       text: $scope.postBody
-     }).success(function(post) {
-       $scope.postBody = null
-       console.log('its been post')
-     })
-    }
+app.controller('loggedIn', function ($scope, UserSvc) {
+  $scope.logz = 'Logged?'
+  $scope.amLoggedIn = function(){
+    return console.log(UserSvc.getUser().value.data);
   }
-
 })
 
 app.service('UserSvc', function ($http) {
@@ -33,6 +23,7 @@ app.service('UserSvc', function ($http) {
     }).then(function (response) {
       svc.token = response.data
       $http.defaults.headers.common['X-Auth'] = response.data
+      console.log(svc.token)
       return svc.getUser()
     })
   }
@@ -43,6 +34,21 @@ app.service('UserSvc', function ($http) {
     }).then(function () {
       return svc.login(username, password)
     })
+  }
+})
+
+//posts controller
+app.controller('PostsCtrl', function ($scope, $http) {
+  $scope.message = 'testing'
+  $scope.addPost = function(){
+    if ($scope.postBody) {
+     $http.post('/blog',{
+       title: 'test',
+       text: $scope.postBody
+     }).success(function(post) {
+       $scope.postBody = null
+     })
+    }
   }
 })
 
