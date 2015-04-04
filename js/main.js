@@ -31,7 +31,6 @@ app.service('UserSvc', function ($http) {
 
 //posts controller
 app.controller('PostsCtrl', function ($scope, $http) {
-  $scope.message = 'testing'
   $scope.addPost = function(){
     if ($scope.postBody) {
      $http.post('/blog',{
@@ -74,18 +73,19 @@ app.config(function ($routeProvider) {
   .when('/posts',    { controller: 'PostsCtrl', templateUrl: 'post.html' })
   .when('/register', { controller: 'RegisterCtrl', templateUrl: 'register.html' })
   .when('/login',    { controller: 'LoginCtrl', templateUrl: 'login.html' })
-}).run( function($rootScope, $location) {
+})
+// .run( function($rootScope, $location) {
 
-    // register listener to watch route changes
-    $rootScope.$on( "$routeChangeStart", function(event, next, current) {
-      if ( $rootScope.loggedIn == null ) {
-        // no logged user, we should be going to #login
-        if ( next.templateUrl == "partials/login.html" ) {
-          // already going to #login, no redirect needed
-        } else {
-          // not going to #login, we should redirect now
-          $location.path( "/login" );
-        }
-      }         
-    });
- })
+//     // register listener to watch route changes
+//     $rootScope.$on( "$routeChangeStart", function(event, next, current) {
+//       if ( $rootScope.loggedIn == null ) {
+//         // no logged user, we should be going to #login
+//         if ( next.templateUrl == "partials/login.html" ) {
+//           // already going to #login, no redirect needed
+//         } else {
+//           // not going to #login, we should redirect now
+//           $location.path( "/login" );
+//         }
+//       }         
+//     });
+//  })
