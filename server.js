@@ -17,6 +17,7 @@ app.use(function(req, res, next) {
 
 
 app.use(express.static('templates'));
+app.use(express.static('uploads'));
 app.use(express.static(__dirname + '/js'))
 
 app.use(multer({ dest: './uploads/',
