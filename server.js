@@ -1,7 +1,9 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var multer  = require('multer');
 
 var app = express();
+// var done=false;
 
 // app.use(require('./auth'))
 app.use('/test', require('./auth'))
@@ -12,12 +14,28 @@ app.use(function(req, res, next) {
     next();
 });
 
+
+
 app.use(express.static('templates'));
 app.use(express.static(__dirname + '/js'))
 
+app.use(multer({ dest: './uploads/',
+ rename: function (fieldname, filename) {
+    return filename + Date.now();
+  },
+  onFileUploadStart: function (file) {
+    console.log(file.originalname + ' is starting ...')
+  },
+  onFileUploadComplete: function (file) {
+    console.log(file.fieldname + ' uploaded to  ' + file.path)
+    // done=true;
+  }
+}));
+
+
 app.get('/', function(req, res){
     // res.json(blog);
-res.sendfile('templates/main.html')
+  res.sendfile('templates/main.html')
     // Post.find(function(err, posts) {
     //     if (err) { return next(err) }
     //     res.json(posts)
@@ -25,7 +43,7 @@ res.sendfile('templates/main.html')
 });
 
 app.get('/test', function(req, res){
-res.sendfile('templates/test.html')
+  res.sendfile('templates/test.html')
 });
 
 app.get('/blog/all', function(req, res){
@@ -49,6 +67,7 @@ var Post = mongoose.model('Post', {
   username: { type: String, required: true },
   title:    { type: String, required: true },
   body:     { type: String, required: true },
+  imgpath:  { type: String, required: true },
   date:     { type: Date,   required: true, default: Date.now }
 })
 
@@ -67,15 +86,25 @@ app.post('/blog', function(req,res) {
         return res.send('Error 400: Post syntax incorrect');
     }
 
-    //post one
+  // if(done==true){
+    // console.log(req.body)
+    // console.log(req.files);
+    // console.log(req.files.userPhoto.path);
+    // // res.end("File uploaded.");
+  // }
+
     var post = new Post({
         username : 'default',
         title : req.body.title,
-        body : req.body.text    
+        body : req.body.text,
+        imgpath : req.files.userPhoto.name
     })
+
+    console.log(post);
 
     post.save(function (err, post){
         if (err) {
+            console.log(err);
             return next(err)
         }
         res.json(201, post)
