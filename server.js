@@ -47,6 +47,14 @@ app.get('/test', function(req, res){
   res.sendfile('templates/test.html')
 });
 
+app.delete('/blog/select/:id', function(req, res){
+    Post.remove( { _id: req.params.id }, function(err, post) {
+        if (err) { return next(err) }
+        res.json(post)
+    })
+  console.log(req.params.id);
+})
+
 app.get('/blog/all', function(req, res){
     Post.find(function(err, posts) {
         if (err) { return next(err) }
@@ -90,7 +98,7 @@ app.post('/blog', function(req,res) {
   // if(done==true){
     // console.log(req.body)
     // console.log(req.files);
-    // console.log(req.files.userPhoto.path);
+    // console.log(req.files.userPhoto);
     // // res.end("File uploaded.");
   // }
 

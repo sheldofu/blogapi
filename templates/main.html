@@ -19,7 +19,8 @@
           <ul class="nav navbar-nav">       
             <li><a href="/#/login">Login</a></li>
             <li><a href="/#/register">Register</a></li>
-            <li><a href="/#/posts">Posts</a></li>
+            <li><a href="/#/posts">New Post</a></li>
+            <li><a href="/#/editposts">Existing Posts</a></li>
           </ul>
     </div>
   </nav>
@@ -28,12 +29,20 @@
 <body >
 <!--   <div class='col-md-2'></div>
   <div class='container col-md-8' ng-view></div> -->
-  <div class='jumbotron' ng-view></div>
+  <div class="smaller" ng-view></div>
 </body>
 
 <script src="/main.js"></script>
 
+<style>
+  .smaller {
+    max-width:862px;
+    margin: auto;
+  }
+</style>
+
 </html>
+
 
 
 

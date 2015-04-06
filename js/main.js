@@ -29,8 +29,25 @@ app.service('UserSvc', function ($http) {
   }
 })
 
-//posts controller
-app.controller('PostsCtrl', function ($scope, $http) {
+app.service('PostsSvc', function ($http) {
+  this.fetch = function() {
+    return $http.get('/blog/all')
+  }
+})
+
+app.controller('EditPostsCtrl', function ($scope, PostsSvc, $http, $location) {
+  PostsSvc.fetch().success(function(posts) {
+    $scope.posts = posts
+  })
+  $scope.specific = function(id, post) {
+    post.deleted = true
+    $http.delete('/blog/select/' + id)
+    .success(function(post){
+    })
+  }
+})
+
+app.controller('PostsCtrl', function ($scope, PostsSvc, $http) {
 //   $scope.addPost = function(){
 //     if ($scope.postBody) {
 //      $http.post('/blog',{
@@ -41,7 +58,7 @@ app.controller('PostsCtrl', function ($scope, $http) {
 //      })
 //     }
 //   }
-})
+});
 
 app.controller('LoginCtrl', function ($scope, $rootScope, UserSvc, $location) {
   $scope.login = function (username, password) {
@@ -50,7 +67,7 @@ app.controller('LoginCtrl', function ($scope, $rootScope, UserSvc, $location) {
       $scope.$emit('login', user)
       $rootScope.loggedIn = 'yes'
       console.log($rootScope.loggedIn)
-      $location.path('/')
+      $location.path('/posts')
     })
   }
 })
@@ -60,7 +77,7 @@ app.controller('RegisterCtrl', function ($scope, UserSvc, $location) {
     UserSvc.register(username, password)
     .then(function (user) {
       $scope.$emit('login', user)
-      $location.path('/')
+      $location.path('/posts')
     })
   }
 })
@@ -73,6 +90,8 @@ app.config(function ($routeProvider) {
   .when('/posts',    { controller: 'PostsCtrl', templateUrl: 'post.html' })
   .when('/register', { controller: 'RegisterCtrl', templateUrl: 'register.html' })
   .when('/login',    { controller: 'LoginCtrl', templateUrl: 'login.html' })
+  .when('/',    { controller: 'LoginCtrl', templateUrl: 'login.html' })
+  .when('/editposts',    { controller: 'EditPostsCtrl', templateUrl: 'editposts.html' })
 })
 .run( function($rootScope, $location) {
 
