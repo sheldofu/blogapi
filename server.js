@@ -47,12 +47,36 @@ app.get('/test', function(req, res){
   res.sendfile('templates/test.html')
 });
 
+app.get('/blog/select/:id', function(req, res){
+    Post.find( { _id: req.params.id }, function(err, post) {
+        if (err) { return next(err) }
+        res.json(post)
+    })
+})
+
+app.put('/blog/select/put/:id', function(req, res){
+
+    console.log(req.params.id)
+
+    Post.update( { _id: req.params.id }, {
+      title : req.body.title,
+      body : req.body.text,
+    }, function (err, post){
+        if (err) {
+            console.log(err);
+            return next(err)
+        }
+        // res.json(201, post)
+        res.sendfile('templates/main.html')
+    })
+
+})
+
 app.delete('/blog/select/:id', function(req, res){
     Post.remove( { _id: req.params.id }, function(err, post) {
         if (err) { return next(err) }
         res.json(post)
     })
-  console.log(req.params.id);
 })
 
 app.get('/blog/all', function(req, res){
@@ -109,15 +133,15 @@ app.post('/blog', function(req,res) {
         imgpath : req.files.userPhoto.name
     })
 
-    console.log(post);
-
     post.save(function (err, post){
         if (err) {
             console.log(err);
             return next(err)
         }
-        res.json(201, post)
+        //res.json(201, post)
+        res.redirect('/#/editposts')
     })
+
 
     // res.json(true)
 })

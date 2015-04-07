@@ -39,11 +39,28 @@ app.controller('EditPostsCtrl', function ($scope, PostsSvc, $http, $location) {
   PostsSvc.fetch().success(function(posts) {
     $scope.posts = posts
   })
+  $scope.editSpecific = function(id, post) {
+    $http.get('blog/select/' + id)
+    .success(function(post){
+      $scope.id = id;
+      $scope.title = post[0].title
+      $scope.text = post[0].body
+    })
+  }
   $scope.specific = function(id, post) {
     post.deleted = true
     $http.delete('/blog/select/' + id)
     .success(function(post){
     })
+  }
+  $scope.editPost = function(){
+     $http.put('blog/select/put/' + $scope.id,{
+       _id: $scope.id,
+       title: $scope.title,
+       text: $scope.text
+     }).success(function(post) {
+       $scope.postBody = null
+     })    
   }
 })
 

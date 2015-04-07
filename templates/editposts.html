@@ -4,7 +4,35 @@
       <li id="{{post._id}}" ng-hide="post.deleted" ng-repeat="post in posts | orderBy:'-date'" class='list-group-item'>
         <strong>@{{ post.username }}</strong>
         <span>{{ post.body }}</span>
+        <button ng-click="editSpecific(post._id, post)">Edit</button>
         <button ng-click="specific(post._id, post)">Delete</button>
       </li>
     </ul>
+
+
+    <h1>Editing Post {{title}}</h1>
+    <form>
+      <div class='form-group'>
+        <div style="display:none" class="input-group">
+            <label for="id">ID:</title>
+            <input name="id" ng-model="id" class='form-control'>      
+        </div>    
+        <div class="input-group">
+            <label for="title">Post Title:</title>
+            <input name="title" ng-model="title" class='form-control'>      
+        </div>    
+        <div class="input-group">  
+            <label for="text">Post Content:</title>
+            <input name="text" ng-model="text" class='form-control'>
+        </div>
+ <!--        <div class="input-group"> 
+          <label for="userPhoto">Photo with blog:</title>
+          <input type="file" name="userPhoto">
+        </div> -->
+          <span class='input-group-btn'>
+<!--            <input type="submit"> -->
+           <button ng-click='editPost()' class='btn btn-default'>Edit Post</button>
+          </span>
+      </div>
+    </form>
   </div>
