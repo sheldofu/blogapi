@@ -1,7 +1,7 @@
 {
   "name": "blogapi",
   "version": "1.0.0",
-  "description": "blog system from friends to be able to update their websites",
+  "description": "Blog system from friends to be able to update their websites",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
